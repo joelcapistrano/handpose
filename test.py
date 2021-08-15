@@ -1,33 +1,18 @@
-'''
-Example of an Android filechooser.
-'''
-
-from textwrap import dedent
+from kivy.app import App
+from kivy.uix.widget import Widget
+from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty
+from kivy.vector import Vector
+from kivy.clock import Clock
+from random import randint
+from kivy.lang import Builder
+from kivy.uix.image import AsyncImage
 
 from plyer import filechooser
-
-from kivy.app import App
-from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.button import Button
 
-from kivy.utils import platform
 
-
-if platform == 'android':
-    from android.permissions import request_permissions, Permission
-    request_permissions([
-        Permission.WRITE_EXTERNAL_STORAGE,
-        Permission.READ_EXTERNAL_STORAGE,
-        Permission.INTERNET,
-    ])
-
-
-class FileChoose(Button):
-    '''
-    Button that triggers 'filechooser.open_file()' and processes
-    the data response from filechooser Activity.
-    '''
+class Main(Widget):
 
     selection = ListProperty([])
 
@@ -42,36 +27,21 @@ class FileChoose(Button):
         Callback function for handling the selection response from Activity.
         '''
         self.selection = selection
+        #print(str(selection))
+
 
     def on_selection(self, *a, **k):
         '''
         Update TextInput.text after FileChoose.selection is changed
         via FileChoose.handle_selection.
         '''
-        App.get_running_app().root.ids.result.text = str(self.selection)
+        self.b_t.ii = self.selection[0]
+        self.box.ii = self.selection[0]
 
-
-class ChooserApp(App):
-    '''
-    Application class with root built in KV.
-    '''
-
+class RunApp(App):
     def build(self):
-        return Builder.load_string(dedent('''
-            <FileChoose>:
-            BoxLayout:
-                BoxLayout:
-                    orientation: 'vertical'
-                    TextInput:
-                        id: result
-                        text: ''
-                        hint_text: 'selected path'
-                    FileChoose:
-                        size_hint_y: 0.1
-                        on_release: self.choose()
-                        text: 'Select a file'
-        '''))
-
+        game = Main()
+        return game
 
 if __name__ == '__main__':
-    ChooserApp().run()
+    RunApp().run()
