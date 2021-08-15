@@ -3,7 +3,15 @@ from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty, StringProperty
+from kivy.utils import platform
 import Fruits
+
+if platform == 'android':
+    from android.permissions import request_permissions, Permission
+    request_permissions([
+        Permission.WRITE_EXTERNAL_STORAGE,
+        Permission.READ_EXTERNAL_STORAGE
+    ])
 
 Builder.load_file('interface.kv')
 
