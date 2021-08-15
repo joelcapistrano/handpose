@@ -6,9 +6,9 @@
     	padding: 50
     	spacing: 20
         Button:
-            text: 'Choose File'
+            on_release: root.choose()
             font_size: 20
-            on_press: root.open_popup()
+            text: 'Select a file'
         Image:
             id: my_image
             source: ""
@@ -20,26 +20,3 @@
             text: "Classify Image"
             font_size: 20
             on_press: app.classify_image()
-
-<FileChoosePopup>:
-    title: "Choose one 'In and Out' exercise footage"
-    size_hint: .9, .9
-    auto_dismiss: False
-
-    BoxLayout:
-        orientation: "vertical"
-        FileChooser:
-            id: filechooser
-            FileChooserIconLayout
-        BoxLayout:
-            size_hint: (1, 0.1)
-            pos_hint: {'center_x': .5, 'center_y': .5}
-            spacing: 20
-            Button:
-                text: "Cancel"
-                on_release: root.dismiss()
-            Button:
-                text: "Load"
-                on_release: root.load(filechooser.selection)
-                id: ldbtn
-                disabled: True if filechooser.selection==[] else False
