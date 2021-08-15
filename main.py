@@ -2,8 +2,9 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
-from kivy.properties import ObjectProperty, StringProperty
+from kivy.properties import ObjectProperty
 from kivy.utils import platform
+from plyer import filechooser
 import Fruits
 
 if platform == 'android':
@@ -17,25 +18,26 @@ Builder.load_file('interface.kv')
 
 class MyLayout(Widget):
 
-    the_popup = ObjectProperty(None)
+    selection = ObjectProperty()
 
-    def open_popup(self):
-        self.the_popup = FileChoosePopup(load=self.load)
-        self.the_popup.open()
+    def choose(self):
+        '''
+        Call plyer filechooser API to run a filechooser Activity.
+        '''
+        filechooser.open_file(on_selection=self.handle_selection)
 
-    def load(self, selection):
-        self.file_path = selection[0]
-        self.the_popup.dismiss()
-        print(self.file_path)
+    def handle_selection(self, selection):
+        '''
+        Callback function for handling the selection response from Activity.
+        '''
+        self.selection = selection[0]
 
-        # check for non-empty list i.e. file selected
-        if self.file_path:
-            self.ids.my_image.source = self.file_path
-
-class FileChoosePopup(Popup):
-
-    load = ObjectProperty()
-
+    def on_selection(self, *a, **k):
+        '''
+        Update TextInput.text after FileChoose.selection is changed
+        via FileChoose.handle_selection.
+        '''
+        App.get_running_app().root.ids.my_image.source = self.selection
 
 class HandPoseApp(App):
 
